@@ -1,5 +1,4 @@
 // src/firebase/firebase.config.js
-// Replace values in your local .env file (see .env.example below).
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -11,5 +10,5 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase app and export it
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+export default app;

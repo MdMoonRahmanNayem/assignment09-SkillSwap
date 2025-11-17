@@ -5,80 +5,105 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   getAuth,
   onAuthStateChanged,
-  signOut,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  signOut,
   updateProfile as firebaseUpdateProfile,
+  sendPasswordResetEmail,
 } from "firebase/auth";
-import { app } from "../firebase/firebase.config";
+import app from "../firebase/firebase.config";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // listen for auth state changes and keep user in sync
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsub = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser || null);
       setLoading(false);
     });
-    return () => unsubscribe();
+    return () => unsub();
   }, [auth]);
 
-  // convenience helpers (return the promises so callers can chain/await)
-  const login = (email, password) => {
+  const signup = async ({ name, photoURL, email, password }) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password)
-      .finally(() => setLoading(false));
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      if (res?.user) {
+        await firebaseUpdateProfile(res.user, {
+          displayName: name || "",
+          photoURL: photoURL || "",
+        });
+      }
+      return res;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const signup = (email, password, displayName = "", photoURL = "") => {
+  const login = async (email, password) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then(async (cred) => {
-        // set displayName / photoURL immediately after creating
-        if (displayName || photoURL) {
-          await firebaseUpdateProfile(cred.user, { displayName, photoURL });
-        }
-        return cred;
-      })
-      .finally(() => setLoading(false));
+    try {
+      return await signInWithEmailAndPassword(auth, email, password);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const googleLogin = () => {
-    const provider = new GoogleAuthProvider();
+  const googleSignIn = async () => {
     setLoading(true);
-    return signInWithPopup(auth, provider)
-      .finally(() => setLoading(false));
+    try {
+      return await signInWithPopup(auth, googleProvider);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
     setLoading(true);
-    return signOut(auth)
-      .finally(() => setLoading(false));
+    try {
+      await signOut(auth);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateProfile = (profile) => {
-    // wrapper for firebase updateProfile
-    if (!auth.currentUser) return Promise.reject(new Error("No user"));
+  const updateUserProfile = async (profile = {}) => {
+    if (!auth.currentUser) throw new Error("No authenticated user");
     setLoading(true);
-    return firebaseUpdateProfile(auth.currentUser, profile)
-      .finally(() => setLoading(false));
+    try {
+      await firebaseUpdateProfile(auth.currentUser, profile);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetPassword = async (email) => {
+    if (!email) throw new Error("Email required");
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const value = {
     user,
     loading,
-    login,
     signup,
-    googleLogin,
+    login,
+    googleSignIn,
     logout,
-    updateProfile,
+    updateUserProfile,
+    resetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
