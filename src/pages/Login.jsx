@@ -18,31 +18,39 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  // Email / password login
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        toast.success("Login successful!");
-        setTimeout(() => navigate(redirectPath, { replace: true }), 500);
-      })
-      .catch((error) => {
-        // use 'error' (not 'err') to avoid unused-vars lint warning
-        const msg = error?.message ? error.message.split(":").slice(1).join(":").trim() : "Login failed";
-        toast.error(msg);
-      })
-      .finally(() => setLoading(false));
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Login successful!");
+      // small delay for toast to show nicely
+      setTimeout(() => navigate(redirectPath, { replace: true }), 300);
+    } catch (error) {
+      // show readable message
+      const msg = error?.message ? error.message.split(":").slice(1).join(":").trim() : "Login failed";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    signInWithPopup(auth, googleProvider)
-      .then(() => {
-        toast.success("Login successful!");
-        navigate(redirectPath, { replace: true });
-      })
-      .catch(() => toast.error("Google login failed"));
+  // Google login
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    try {
+      await signInWithPopup(auth, googleProvider);
+      toast.success("Login successful!");
+      navigate(redirectPath, { replace: true });
+    } catch (error) {
+      const msg = error?.message ? error.message.split(":").slice(1).join(":").trim() : "Google login failed";
+      toast.error(msg);
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   return (
@@ -54,7 +62,7 @@ export default function Login() {
           Login
         </h1>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4" aria-label="login form">
           {/* Email */}
           <label className="block text-sm font-medium text-slate-700">
             Email
@@ -65,6 +73,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full mt-1 p-2 border rounded"
               placeholder="your@email.com"
+              aria-label="email"
             />
           </label>
 
@@ -87,6 +96,7 @@ export default function Login() {
             type="submit"
             disabled={loading}
             className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700 disabled:opacity-50"
+            aria-busy={loading}
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -95,14 +105,16 @@ export default function Login() {
         {/* Google login */}
         <button
           onClick={handleGoogleLogin}
-          className="w-full mt-4 bg-white border py-2 rounded flex items-center justify-center gap-2 hover:bg-slate-50"
+          disabled={googleLoading}
+          className="w-full mt-4 bg-white border py-2 rounded flex items-center justify-center gap-2 hover:bg-slate-50 disabled:opacity-50"
+          aria-busy={googleLoading}
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             className="w-5 h-5"
             alt="google"
           />
-          <span>Continue with Google</span>
+          <span>{googleLoading ? "Signing in..." : "Continue with Google"}</span>
         </button>
 
         {/* Link to Signup */}

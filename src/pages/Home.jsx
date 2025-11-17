@@ -1,144 +1,190 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 // src/pages/Home.jsx
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+// local JSON data
 import skillsData from "../data/skills-data.js";
 
 export default function Home() {
-  const [skills, setSkills] = useState([]);
+  // ✅ Initialize skills directly (no ESLint error)
+  const [skills] = useState(() => skillsData || []);
 
+  // ✅ Initialize AOS only (safe)
   useEffect(() => {
-    // Set skills once when component mounts
-    setSkills(skillsData);
+    AOS.init({ duration: 700, once: true });
   }, []);
 
   return (
     <div className="max-w-6xl mx-auto px-4">
-      {/* ---------------- HERO SLIDER ---------------- */}
+
+      {/* ============= HERO SLIDER ============= */}
       <div className="my-6">
-        <Swiper loop autoplay={{ delay: 3000 }}>
+        <Swiper loop autoplay={{ delay: 2000 }}>
           <SwiperSlide>
-            <img
-              src="https://images.unsplash.com/photo-1529336953121-4d0bbd30a42d"
-              className="w-full h-64 object-cover rounded-xl"
-              alt=""
-            />
+            <div
+              className="h-64 flex items-center justify-center bg-cover bg-center rounded-lg text-white text-3xl font-bold"
+              style={{
+                backgroundImage:
+                  "url('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70')",
+              }}
+            >
+              Learn New Skills
+            </div>
           </SwiperSlide>
 
           <SwiperSlide>
-            <img
-              src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0"
-              className="w-full h-64 object-cover rounded-xl"
-              alt=""
-            />
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <img
-              src="https://images.unsplash.com/photo-1498079022511-d15614cb1c02"
-              className="w-full h-64 object-cover rounded-xl"
-              alt=""
-            />
+            <div
+              className="h-64 flex items-center justify-center bg-cover bg-center rounded-lg text-white text-3xl font-bold"
+              style={{
+                backgroundImage:
+                  "url('https://images.unsplash.com/photo-1519389950473-47ba0277781c')",
+              }}
+            >
+              Teach What You Know
+            </div>
           </SwiperSlide>
         </Swiper>
-
-        <h1 className="text-3xl font-bold mt-6 text-slate-800">
-          Learn, Share & Trade Skills Locally
-        </h1>
-        <p className="text-slate-600 mt-2">
-          Connect with local experts — learn real skills with real people.
-        </p>
       </div>
 
-      {/* ---------------- POPULAR SKILLS ---------------- */}
-      <div className="mt-10">
+      {/* ============= POPULAR SKILLS SECTION ============= */}
+      <section className="mt-10" data-aos="fade-up">
         <h2 className="text-2xl font-semibold mb-4">Popular Skills</h2>
 
         <div className="grid md:grid-cols-3 gap-6">
           {skills.map((skill) => (
             <div
               key={skill.skillId}
-              className="bg-white rounded-lg shadow hover:shadow-lg transition"
+              className="bg-white shadow rounded-lg p-4"
+              data-aos="zoom-in"
             >
               <img
                 src={skill.image}
                 alt={skill.skillName}
-                className="w-full h-40 object-cover rounded-t-lg"
+                className="rounded-md h-40 w-full object-cover"
               />
 
-              <div className="p-4 space-y-2">
-                <h3 className="font-semibold text-lg">{skill.skillName}</h3>
-                <p className="text-sm text-slate-600">Rating: ⭐ {skill.rating}</p>
-                <p className="font-medium text-teal-600">${skill.price}</p>
+              <h3 className="text-lg font-semibold mt-3">
+                {skill.skillName}
+              </h3>
 
-                <Link
-                  to={`/skill/${skill.skillId}`}
-                  className="inline-block px-3 py-2 mt-2 bg-teal-600 text-white rounded"
-                >
+              <p className="text-sm text-slate-600 mt-1">
+                Rating: ⭐ {skill.rating}
+              </p>
+
+              <p className="text-sm mt-1 text-slate-700">
+                Price: ${skill.price}
+              </p>
+
+              <Link to={`/skill/${skill.skillId}`}>
+                <button className="mt-3 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700">
                   View Details
-                </Link>
-              </div>
+                </button>
+              </Link>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* ---------------- TOP RATED PROVIDERS ---------------- */}
-      <div className="mt-16">
-        <h2 className="text-2xl font-semibold mb-4">Top Rated Providers</h2>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="p-4 bg-white shadow rounded">
-            <h3 className="font-semibold text-lg">Alex Martin</h3>
-            <p className="text-sm text-slate-600">⭐⭐⭐⭐⭐ (4.9)</p>
-            <p className="mt-2 text-sm text-slate-700">Guitar Instructor</p>
-          </div>
-
-          <div className="p-4 bg-white shadow rounded">
-            <h3 className="font-semibold text-lg">Ayesha Khan</h3>
-            <p className="text-sm text-slate-600">⭐⭐⭐⭐⭐ (4.8)</p>
-            <p className="mt-2 text-sm text-slate-700">Cooking Expert</p>
-          </div>
-
-          <div className="p-4 bg-white shadow rounded">
-            <h3 className="font-semibold text-lg">Maya Das</h3>
-            <p className="text-sm text-slate-600">⭐⭐⭐⭐⭐ (4.7)</p>
-            <p className="mt-2 text-sm text-slate-700">Yoga Trainer</p>
-          </div>
-        </div>
-      </div>
-
-      {/* ---------------- HOW IT WORKS ---------------- */}
-      <div className="mt-16 mb-10">
-        <h2 className="text-2xl font-semibold mb-4">How It Works</h2>
+      {/* ============= HOW IT WORKS SECTION ============= */}
+      <section className="mt-16" data-aos="fade-up">
+        <h2 className="text-2xl font-semibold mb-4">How SkillSwap Works</h2>
 
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="p-4 bg-white shadow rounded">
-            <h3 className="font-semibold text-lg">1. Browse Skills</h3>
-            <p className="text-sm text-slate-600 mt-2">
-              Explore hundreds of skills offered by real people around you.
+          <div className="p-4 bg-white shadow rounded-lg" data-aos="fade-right">
+            <h3 className="font-semibold text-lg">1. Choose a Skill</h3>
+            <p className="text-sm text-slate-600 mt-1">
+              Browse skills offered by experts in your community.
             </p>
           </div>
 
-          <div className="p-4 bg-white shadow rounded">
-            <h3 className="font-semibold text-lg">2. Connect Locally</h3>
-            <p className="text-sm text-slate-600 mt-2">
-              Contact providers directly and book sessions instantly.
+          <div className="p-4 bg-white shadow rounded-lg" data-aos="fade-up">
+            <h3 className="font-semibold text-lg">2. Book a Session</h3>
+            <p className="text-sm text-slate-600 mt-1">
+              Pick a time slot and contact the skill provider.
             </p>
           </div>
 
-          <div className="p-4 bg-white shadow rounded">
-            <h3 className="font-semibold text-lg">3. Learn & Exchange</h3>
-            <p className="text-sm text-slate-600 mt-2">
-              Improve skills, exchange value, and learn face-to-face!
+          <div className="p-4 bg-white shadow rounded-lg" data-aos="fade-left">
+            <h3 className="font-semibold text-lg">3. Learn & Teach</h3>
+            <p className="text-sm text-slate-600 mt-1">
+              Join the session and exchange skills effectively.
             </p>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* ============= EXTRA SECTION (Upcoming Workshops) ============= */}
+      <section className="mt-16" data-aos="fade-up">
+        <h2 className="text-2xl font-semibold mb-4">
+          Upcoming Workshops & Events
+        </h2>
+
+        <p className="text-slate-600 mb-4">
+          Join local workshops hosted by SkillSwap community experts.
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-6">
+
+          <div
+            className="bg-white rounded-lg shadow p-4"
+            data-aos="zoom-in"
+            data-aos-delay="50"
+          >
+            <h3 className="font-semibold">Beginner Guitar Jam</h3>
+            <p className="text-sm text-slate-600 mt-1">
+              Alex Martin — 12th Dec • Local Studio
+            </p>
+            <p className="mt-2 text-sm">
+              A fun group session for absolute beginners.
+            </p>
+            <button className="mt-3 px-4 py-2 bg-teal-600 text-white rounded">
+              Register
+            </button>
+          </div>
+
+          <div
+            className="bg-white rounded-lg shadow p-4"
+            data-aos="zoom-in"
+            data-aos-delay="100"
+          >
+            <h3 className="font-semibold">English Speaking Meetup</h3>
+            <p className="text-sm text-slate-600 mt-1">
+              Sara Hossain — 18th Dec • Community Center
+            </p>
+            <p className="mt-2 text-sm">
+              Practice English with friendly group discussion.
+            </p>
+            <button className="mt-3 px-4 py-2 bg-teal-600 text-white rounded">
+              Register
+            </button>
+          </div>
+
+          <div
+            className="bg-white rounded-lg shadow p-4"
+            data-aos="zoom-in"
+            data-aos-delay="150"
+          >
+            <h3 className="font-semibold">Weekend Yoga Session</h3>
+            <p className="text-sm text-slate-600 mt-1">
+              Maya Das — Every Sat • Park Area
+            </p>
+            <p className="mt-2 text-sm">
+              Outdoor yoga suitable for all levels.
+            </p>
+            <button className="mt-3 px-4 py-2 bg-teal-600 text-white rounded">
+              Register
+            </button>
+          </div>
+
+        </div>
+      </section>
+
     </div>
   );
 }
