@@ -15,6 +15,7 @@ function App() {
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
+        <h1 className="text-4xl font-bold text-red-500">Tailwind Working!</h1>
       </div>
       <h1>Vite + React</h1>
       <div className="card">
