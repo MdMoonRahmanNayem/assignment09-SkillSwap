@@ -9,6 +9,7 @@ import SkillDetails from "../pages/SkillDetails";
 import MyProfile from "../pages/MyProfile";
 
 import ProtectedRoute from "../components/ProtectedRoute";
+import NotFound from "../pages/NotFound";
 
 export default function AppRoutes() {
   return (
@@ -28,7 +29,6 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/profile"
         element={
@@ -37,6 +37,9 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* Catch-all NotFound */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
