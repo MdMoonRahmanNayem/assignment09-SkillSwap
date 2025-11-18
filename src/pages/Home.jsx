@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -8,14 +7,11 @@ import "swiper/css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-// local JSON data
 import skillsData from "../data/skills-data.js";
 
 export default function Home() {
-  // ✅ Initialize skills directly (no ESLint error)
   const [skills] = useState(() => skillsData || []);
 
-  // ✅ Initialize AOS only (safe)
   useEffect(() => {
     AOS.init({ duration: 700, once: true });
   }, []);
@@ -23,7 +19,7 @@ export default function Home() {
   return (
     <div className="max-w-6xl mx-auto px-4">
 
-      {/* ============= HERO SLIDER ============= */}
+      
       <div className="my-6">
         <Swiper loop autoplay={{ delay: 2000 }}>
           <SwiperSlide>
@@ -52,7 +48,7 @@ export default function Home() {
         </Swiper>
       </div>
 
-      {/* ============= POPULAR SKILLS SECTION ============= */}
+      
       <section className="mt-10" data-aos="fade-up">
         <h2 className="text-2xl font-semibold mb-4">Popular Skills</h2>
 
@@ -91,7 +87,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ============= HOW IT WORKS SECTION ============= */}
+      
       <section className="mt-16" data-aos="fade-up">
         <h2 className="text-2xl font-semibold mb-4">How SkillSwap Works</h2>
 
@@ -119,7 +115,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ============= EXTRA SECTION (Upcoming Workshops) ============= */}
+      
       <section className="mt-16" data-aos="fade-up">
         <h2 className="text-2xl font-semibold mb-4">
           Upcoming Workshops & Events

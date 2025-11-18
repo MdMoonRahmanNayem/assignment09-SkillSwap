@@ -1,4 +1,3 @@
-// src/data/skills-data.js
 const skillsData = [
   {
     skillId: 1,
