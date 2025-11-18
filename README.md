@@ -1,16 +1,39 @@
-# React + Vite
+SkillSwap – A Local Skill Exchange Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Project Purpose
 
-Currently, two official plugins are available:
+This project is a skill exchange platform where users can explore different skills, view skill details, and manage their profile. The project includes Firebase authentication (login, signup, logout), protected routes, and a responsive user interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Live URL
 
-## React Compiler
+--
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Key Features
 
-## Expanding the ESLint configuration
+User authentication using Firebase (Login, Signup, Logout)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Protected routes (Profile page only accessible after login)
+
+Update profile information (name, image URL)
+
+Skill list and skill details pages
+
+Responsive design with mobile-friendly navbar
+
+Context API for managing user state
+
+Clean card-based UI for skill display
+
+NPM Packages Used
+
+react
+react-dom
+react-router-dom
+firebase
+tailwindcss
+postcss
+autoprefixer
+@vitejs/plugin-react
+react-hot-toast
+swiper
+aos
