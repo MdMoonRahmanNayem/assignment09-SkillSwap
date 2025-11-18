@@ -6,7 +6,7 @@ This project is a skill exchange platform where users can explore different skil
 
 Live URL
 
---
+https://skillswap09.netlify.app/
 
 Key Features
 
